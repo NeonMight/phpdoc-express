@@ -16,6 +16,7 @@
     "gulp": "^3.9.1",
     "gulp-jshint": "^2.0.0",
     "gulp-nodemon": "^2.0.6",
-    "jshint": "^2.9.2"
+    "jshint": "^2.9.2",
+    "morgan": "^1.7.0"
   }
 }

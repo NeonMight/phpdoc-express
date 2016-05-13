@@ -1,7 +1,9 @@
 var express = require('express');
+var morgan = require('morgan');
 var app = express();
 var port = 3000;
 
+app.use(morgan('dev'));
 app.use('/',express.static('./build/site/'));
 
 app.get('/', function(req, res)

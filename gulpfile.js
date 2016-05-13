@@ -1,34 +1,46 @@
-var gulp = require('gulp');
-var nodemon = require('gulp-nodemon');
-var jshint = require('gulp-jshint');
-var exec = require('child_process').exec;
-
-gulp.task('rebuild-docs', function(e)
+(function()
 {
-	// phpdoc -d build/src -t build/site
-	console.log('Rebuilding...');
-	exec('phpdoc -d build/src -t build/site', function(err, stdout, stderr)
+	'use strict';
+	var gulp = require('gulp');
+	var nodemon = require('gulp-nodemon');
+	var jshint = require('gulp-jshint');
+	var exec = require('child_process').exec;
+
+	gulp.task('phpdoc', function(e)
 	{
-		console.log(stdout);
-		console.log(stderr);
-		e(err);
-	})
-});
+		// phpdoc -d build/src -t build/site
+		console.log('Rebuilding...');
+		exec('phpdoc -d build/src -t build/site -p', function(err, stdout, stderr)
+		{
+			console.log(stdout);
+			console.log(stderr);
+			e(err);
+		})
+	});
 
-gulp.task('lint',function()
-{
-	console.log('linting...');
-	gulp.src('index.js').pipe(jshint());
-});
-
-gulp.task('start',function()
-{
-	gulp.watch('build/src/**/*.php',['rebuild-docs']);
-	nodemon(
+	gulp.task('rebuild',function()
 	{
-		script: 'index.js',
-		ext: 'js',
-		env: {'NODE_ENV' : 'development'}
-		// tasks: ['lint']
+		gulp.watch('build/src/**/*.php',['phpdoc']);
 	})
-});
+
+
+	gulp.task('reload',function()
+	{
+		nodemon(
+		{
+			script: 'index.js',
+			ext: 'js',
+			env: {'NODE_ENV' : 'development'}
+			// tasks: ['lint']
+		})
+	});
+
+	/*this one is not used...for now...*/
+	gulp.task('lint',function()
+	{
+		console.log('linting...');
+		gulp.src('index.js').pipe(jshint());
+	});
+	
+	gulp.task('default',['rebuild','reload'])
+}());
